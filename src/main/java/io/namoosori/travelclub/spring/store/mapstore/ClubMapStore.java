@@ -2,10 +2,14 @@ package io.namoosori.travelclub.spring.store.mapstore;
 
 import io.namoosori.travelclub.spring.aggregate.club.TravelClub;
 import io.namoosori.travelclub.spring.store.ClubStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+
+@Repository("clubStore")
 public class ClubMapStore implements ClubStore {
 
     private Map<String, TravelClub> clubMap;

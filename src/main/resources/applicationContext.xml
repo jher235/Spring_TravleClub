@@ -5,11 +5,13 @@
         http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean id="clubStore" class="io.namoosori.travelclub.spring.store.mapstore.ClubMapStore"/>
-    <bean id="clubSurvice" class="io.namoosori.travelclub.spring.service.logic.ClubServiceLogic">
-        <constructor-arg ref="clubStore"/>
+    <context:component-scan base-package="io.namoosori.travelclub.spring"/> <!--특정 패키지부터 빈들을 찾아라-->
 
-    </bean>
+<!--    <bean id="clubStore" class="io.namoosori.travelclub.spring.store.mapstore.ClubMapStore"/>-->
+<!--    <bean id="clubSurvice" class="io.namoosori.travelclub.spring.service.logic.ClubServiceLogic">-->
+<!--        <constructor-arg ref="clubStore"/>-->
+
+<!--    </bean>-->
 
 
 </beans>
