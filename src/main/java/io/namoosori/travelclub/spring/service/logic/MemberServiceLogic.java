@@ -5,6 +5,9 @@ import io.namoosori.travelclub.spring.service.MemberService;
 import io.namoosori.travelclub.spring.service.sdo.MemberCdo;
 import io.namoosori.travelclub.spring.shared.NameValueList;
 import io.namoosori.travelclub.spring.store.MemberStore;
+import io.namoosori.travelclub.spring.util.exception.MemberDuplicationException;
+import io.namoosori.travelclub.spring.util.exception.NoSuchClubException;
+import io.namoosori.travelclub.spring.util.exception.NoSuchMemberException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,31 +25,57 @@ public class MemberServiceLogic implements MemberService {
 
     @Override
     public String registerMember(MemberCdo member) {
-        return null;
+        String email = member.getEmail();
+        CommunityMember foundedmember = memberStore.retrieveByEmail(email);
+
+        if(foundedmember != null){
+            throw new MemberDuplicationException("Member already exists with email : "+email);
+        }
+        foundedmember = new CommunityMember(
+                member.getEmail(), member.getName(), member.getPhoneNumber()
+        );
+        foundedmember.setNickName(member.getNickName());
+        foundedmember.setBirthDay(member.getBirthDay());
+
+        foundedmember.checkValidation(); //이메일 체크
+
+        memberStore.create(foundedmember);
+
+        return foundedmember.getId();
     }
 
     @Override
     public CommunityMember findMemberById(String memberId) {
-        return null;
+        return memberStore.retrieve(memberId);
     }
 
     @Override
     public CommunityMember findMemberByEmail(String memberEmail) {
-        return null;
+        return memberStore.retrieveByEmail(memberEmail);
     }
 
     @Override
     public List<CommunityMember> findMembersByName(String name) {
-        return null;
+
+        return memberStore.retrieveByName(name);
     }
 
     @Override
-    public void modifyMember(String memberId, NameValueList member) {
+    public void modifyMember(String memberId, NameValueList nameValueList) {
+        CommunityMember targetMember = memberStore.retrieve(memberId);
+        if(targetMember ==null){
+            throw new NoSuchClubException("No Such member with ID : "+memberId);
+        }
 
+        targetMember.modifyValues(nameValueList);
+        memberStore.update(targetMember);
     }
 
     @Override
     public void removeMember(String memberId) {
-
+        if(!memberStore.exists(memberId)){
+            throw new NoSuchMemberException("No such member with id : "+memberId);
+        }
+        memberStore.delete(memberId);
     }
 }
