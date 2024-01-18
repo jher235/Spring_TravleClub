@@ -1,3 +1,22 @@
 server:
   port: 8090
+#아래는 h2 database를  사용하기 위한 설정
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test #h2 console을 넣었을 때 입력함. 메모리 기반, 이름은 test #http://localhost:8090/h2-console 로 접속해서 url을 동일하게 맞춰줘야 저장됨
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect #데이터베이스가 h2이기 때문에 jpa에 의해서 쿼리가 만들어질 때 h2bd의 쿼리를 이용하라는 것
+    show_sql: true
+    properties:
+      hibernate:
+        format_sql: true  #쿼리가 나올 때 정돈되어서 나옴
 
